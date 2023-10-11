@@ -200,8 +200,6 @@ for (s in 1:length(scenarios)){
     max(results_scenarios[[s]][,"N_Chap"])
 }
 
-options(scipen=99)
-
 est = numeric()
 est_sds = numeric()
 est_pvals = numeric()
@@ -210,8 +208,8 @@ for (s in 1:length(scenarios)){
   est_sd = apply(est_sd,1,paste0, collapse = " (")
   est_sd = paste0(est_sd,")")
   est_sds = cbind(est_sds,est_sd)
-  TTESTS = apply(results_scenarios[[s]][,c(1,2,3,4,8)]-scenarios[[s]]$N,2,t.test)
-  est_pval = cbind(t(t(format(round(colMeans(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1),nsmall=1))),as.numeric(unlist(TTESTS)[c(3,14,25,36,47)]))
+  TTESTS = apply(results_scenarios[[s]][,c(2,3,4,8)]-scenarios[[s]]$N,2,t.test)
+  est_pval = cbind(t(t(format(round(colMeans(results_scenarios[[s]][,c(2,3,4,8)],na.rm=TRUE),1),nsmall=1))),as.numeric(unlist(TTESTS)[c(3,14,25,36)]))
   est_pval[as.numeric(est_pval[,2])<=0.001,2] = "***"
   est_pval[as.numeric(est_pval[,2])>0.001&est_pval[,2]<=0.01,2] = "**"
   est_pval[as.numeric(est_pval[,2])>0.01&est_pval[,2]<=0.05,2] = "*"
@@ -221,78 +219,18 @@ for (s in 1:length(scenarios)){
   est = cbind(est,t(t(round(colMeans(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1))))
 }
 
-X = cbind(1:7,
-          c(100,100,500,500,10000,10000,100),
-          c(0.5,0.35,0.4,0.25,0.3,0.25,0.15),
-          c(0.2,0.3,0.15,0.2,0.1,0.15,0.15),
-          t(est_pvals))
-DSE_means = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(DSE_means)
-DSE_means = gsub(".","&.",DSE_means,fixed=TRUE)
-DSE_means = gsub("  ","",DSE_means)
-print(DSE_means)
+est_pvals
 
 est_sds = numeric()
 for (s in 1:length(scenarios)){
-  est_sd  = format(round(colSds(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1),nsmall=1)
+  est_sd  = round(colSds(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1)
   est_sds = cbind(est_sds, est_sd)
 }
-
-est_sds = est_sds[-1,]
-
-X = cbind(1:7,
-          c(100,100,500,500,10000,10000,100),
-          c(0.5,0.35,0.4,0.25,0.3,0.25,0.15),
-          c(0.2,0.3,0.15,0.2,0.1,0.15,0.15),
-          t(est_sds))
-DSE_sds = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(DSE_sds)
-DSE_sds = gsub(".","&.",DSE_sds,fixed=TRUE)
-DSE_sds = gsub("  ","",DSE_sds)
-print(DSE_sds)
+est_sds
 
 est_rmses = numeric()
 for (s in 1:length(scenarios)){
-  est_rmse  = format(round(colMeans(((results_scenarios[[s]][,c(1,2,3,4,8)]-scenarios[[s]]$N)^2),na.rm=TRUE)^0.5,1),nsmall=1)
+  est_rmse  = round(colMeans(((results_scenarios[[s]][,c(1,2,3,4,8)]-scenarios[[s]]$N)^2),na.rm=TRUE)^0.5,1)
   est_rmses = cbind(est_rmses, est_rmse)
 }
-
-est_rmses = est_rmses[-1,]
-
-X = cbind(1:7,
-          c(100,100,500,500,10000,10000,100),
-          c(0.5,0.35,0.4,0.25,0.3,0.25,0.15),
-          c(0.2,0.3,0.15,0.2,0.1,0.15,0.15),
-          t(est_rmses))
-DSE_rmses = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(DSE_rmses)
-DSE_rmses = gsub(".","&.",DSE_rmses,fixed=TRUE)
-DSE_rmses = gsub("  ","",DSE_rmses)
-print(DSE_rmses)
-
-est_sds = numeric()
-est_rmses = numeric()
-for (s in 1:length(scenarios)){
-  est_sd  = format(round(colSds(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1),nsmall=1)
-  est_sds = cbind(est_sds, est_sd)
-}
-
-for (s in 1:length(scenarios)){
-  est_rmse  = format(round(colMeans(((results_scenarios[[s]][,c(1,2,3,4,8)]-scenarios[[s]]$N)^2),na.rm=TRUE)^0.5,1),nsmall=1)
-  est_rmses = cbind(est_rmses, est_rmse)
-}
-
-est_sds_rmses = rbind(est_sds[-1,],est_rmses[-1,])
-
-X = cbind(1:7,
-          t(est_sds_rmses))
-DSE_sds_rmses = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(DSE_sds_rmses)
-DSE_sds_rmses = gsub(".","&.",DSE_sds_rmses,fixed=TRUE)
-DSE_sds_rmses = gsub("  ","",DSE_sds_rmses)
-print(DSE_sds_rmses)
-
-DSE_means
-DSE_sds
-DSE_rmses
-DSE_sds_rmses
+est_rmses
