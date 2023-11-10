@@ -195,7 +195,6 @@ print(round(colMeans(results_scenarios[[s]]),1))
 }
 
 for (s in 1:length(scenarios)){
-  print(sum(results_scenarios[[s]][,"N_LP"]>(10*mean(results_scenarios[[s]][,"N_Chap"]))))
   results_scenarios[[s]][results_scenarios[[s]][,"N_LP"]>10*mean(results_scenarios[[s]][,"N_Chap"]),"N_LP"] = 
     max(results_scenarios[[s]][,"N_Chap"])
 }
