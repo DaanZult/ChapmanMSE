@@ -1,3 +1,9 @@
+##############################################
+## Running this script in R, available at   ##
+## https://www.r-project.org/ gives the     ##
+## results of Table 1 and 8                ##
+##############################################
+
 rm(list=ls())
 gc()
 
@@ -172,8 +178,8 @@ for (s in 1:length(scenarios)){
   N_Kosmidis <- NULL
   
   N_Chap <- NULL
-
-# Start Monte Carlo simulation for scenario s  
+  
+  # Start Monte Carlo simulation for scenario s  
   for (mc in 1:MC){
     table = generate_table(N = N, p_a = p_a, p_b = p_b, osn = osn)  # generates table
     DSEs = estimate_DSEs(table) 
@@ -199,6 +205,9 @@ for (s in 1:length(scenarios)){
   print(s)
   print(round(colMeans(results_scenarios[[s]]),1))
 }
+
+# save.image("C:/Users/daanz/OneDrive/Bureaublad/Werk/Vangst Hervangst/Chapman/Results/Table DSE publicatie.RData")
+# load("C:/Users/daanz/OneDrive/Bureaublad/Werk/Vangst Hervangst/Chapman/Results/Table DSE publicatie.RData")
 
 # replace failures in N_LP
 for (s in 1:length(scenarios)){
@@ -242,6 +251,4 @@ for (s in 1:length(scenarios)){
 t(est_means)
 # Results Table 8
 cbind(t(est_sds),t(est_rmses))
-# end
-
-      
+# end script Table 1 and 8
