@@ -1,6 +1,11 @@
+##############################################
+## Running this script in R, available at   ##
+## https://www.r-project.org/ gives the     ##
+## results  of Table 5, 11 and 12           ##
+##############################################
+
 rm(list=ls())
 gc()
-
 set.seed(42)
 
 library(matrixStats)
@@ -12,29 +17,72 @@ library(Rcapture)
 # no. iterations
 MC = 60000
 
+# Define scenario's
 results_scenarios = list()
 scenarios = list()
-scenarios[[1]]  = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3, N = 100,   osn_AB = 1, osn_AC = 1, osn_BC = 1, formula = "mysum ~ list_a + list_b + list_c")
-scenarios[[2]]  = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2, N = 500,   osn_AB = 1, osn_AC = 1, osn_BC = 1, formula = "mysum ~ list_a + list_b + list_c")
-scenarios[[3]]  = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25, N = 10000, osn_AB = 1, osn_AC = 1, osn_BC = 1, formula = "mysum ~ list_a + list_b + list_c")
+scenarios[[1]] = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3,
+                      N = 100, osn_AB = 1, osn_AC = 1, osn_BC = 1,
+                      formula = "mysum~list_a+list_b+list_c")
+scenarios[[2]] = list(Nsources = 3, p_a = 0.4, p_b = 0.3, p_c = 0.2,
+                      N = 500, osn_AB = 1, osn_AC = 1, osn_BC = 1, 
+                      formula = "mysum~list_a+list_b+list_c")
+scenarios[[3]] = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25,
+                      N = 10000, osn_AB = 1, osn_AC = 1, osn_BC = 1,
+                      formula = "mysum~list_a+list_b+list_c")
 
-scenarios[[4]]  = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3, N = 100,   osn_AB = 1.5, osn_AC = 1, osn_BC = 1, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b")
-scenarios[[5]]  = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2, N = 500,   osn_AB = 1.5, osn_AC = 1, osn_BC = 1, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b")
-scenarios[[6]]  = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25, N = 10000, osn_AB = 1.5, osn_AC = 1, osn_BC = 1, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b")
+scenarios[[4]] = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3,
+                      N = 100, osn_AB = 1.5, osn_AC = 1, osn_BC = 1,
+                      formula = "mysum~list_a+list_b+list_c+list_a:list_b")
+scenarios[[5]] = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2,
+                      N = 500, osn_AB = 1.5, osn_AC = 1, osn_BC = 1,
+                      formula = "mysum~list_a+list_b+list_c+list_a:list_b")
+scenarios[[6]] = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25,
+                      N = 10000, osn_AB = 1.5, osn_AC = 1, osn_BC = 1,
+                      formula = "mysum~list_a+list_b+list_c+list_a:list_b")
 
-scenarios[[7]]  = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3, N = 100,   osn_AB = 1.5, osn_AC = 1, osn_BC = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b + list_b:list_c")
-scenarios[[8]]  = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2, N = 500,   osn_AB = 1.5, osn_AC = 1, osn_BC = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b + list_b:list_c")
-scenarios[[9]]  = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25, N = 10000, osn_AB = 1.5, osn_AC = 1, osn_BC = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b + list_b:list_c")
+scenarios[[7]] = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3,
+                      N = 100, osn_AB = 1.5, osn_AC = 1, osn_BC = 0.5,
+                      formula = "mysum~list_a+list_b+list_c+list_a:list_b+list_b:list_c")
+scenarios[[8]] = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2,
+                      N = 500, osn_AB = 1.5, osn_AC = 1, osn_BC = 0.5,
+                      formula = "mysum~list_a+list_b+list_c+list_a:list_b+list_b:list_c")
+scenarios[[9]] = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25,
+                      N = 10000, osn_AB = 1.5, osn_AC = 1, osn_BC = 0.5,
+                      formula = "mysum~list_a+list_b+list_c+list_a:list_b+list_b:list_c")
 
-scenarios[[10]] = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3, N = 100,   osn_AB = 1.5, osn_AC = 0.75, osn_BC = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b + list_a:list_c + list_b:list_c")
-scenarios[[11]] = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2, N = 500,   osn_AB = 1.5, osn_AC = 0.75, osn_BC = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b + list_a:list_c + list_b:list_c")
-scenarios[[12]] = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25, N = 10000, osn_AB = 1.5, osn_AC = 0.75, osn_BC = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_a:list_b + list_a:list_c + list_b:list_c")
+scenarios[[10]] = list(Nsources = 3, p_a = 0.5, p_b = 0.4,  p_c = 0.3,
+                       N = 100, osn_AB = 1.5, osn_AC = 0.75, osn_BC = 0.5,
+                       formula = "mysum~list_a+list_b+list_c+
+list_a:list_b+list_a:list_c+list_b:list_c")
+scenarios[[11]] = list(Nsources = 3, p_a = 0.4, p_b = 0.3,  p_c = 0.2,
+                       N = 500, osn_AB = 1.5, osn_AC = 0.75, osn_BC = 0.5,
+                       formula = "mysum~list_a+list_b+list_c+
+list_a:list_b+list_a:list_c+list_b:list_c")
+scenarios[[12]] = list(Nsources = 3, p_a = 0.35, p_b = 0.3, p_c = 0.25,
+                       N = 10000, osn_AB = 1.5, osn_AC = 0.75, osn_BC = 0.5,
+                       formula = "mysum~list_a+list_b+list_c+
+list_a:list_b+list_a:list_c+list_b:list_c")
 
-scenarios[[13]] = list(Nsources = 4, p_a = 0.4, p_b = 0.35,  p_c = 0.25, p_d = 0.2, N = 20000, osn_AB = 1,   osn_BC = 1,   osn_CD = 1,   osn_AD = 1,   formula = "mysum ~ list_a + list_b + list_c + list_d")
-scenarios[[14]] = list(Nsources = 4, p_a = 0.4, p_b = 0.35,  p_c = 0.25, p_d = 0.2, N = 20000, osn_AB = 1.5, osn_AD = 1.5, osn_BC = 0.75, osn_CD = 0.5, formula = "mysum ~ list_a + list_b + list_c + list_d + list_a:list_b + list_b:list_c + list_c:list_d + list_a:list_d + list_a:list_c + list_b:list_d + list_a:list_b:list_c + list_a:list_b:list_d + list_a:list_c:list_d + list_b:list_c:list_d")
+scenarios[[13]] = list(Nsources = 4, p_a = 0.4, p_b = 0.35,
+                       p_c = 0.25, p_d = 0.2, N = 20000,
+                       osn_AB = 1, osn_BC = 1, osn_CD = 1, osn_AD = 1,
+                       formula = "mysum~list_a+list_b+list_c+list_d")
+scenarios[[14]] = list(Nsources = 4, p_a = 0.4, p_b = 0.35,
+                       p_c = 0.25, p_d = 0.2, N = 20000,
+                       osn_AB = 1.5, osn_AD = 1.5, osn_BC = 0.75, osn_CD = 0.5,
+                       formula = "mysum~list_a+list_b+list_c+list_d+
+list_a:list_b+list_b:list_c+list_c:list_d+
+list_a:list_d+list_a:list_c+list_b:list_d+
+list_a:list_b:list_c+list_a:list_b:list_d+
+list_a:list_c:list_d+list_b:list_c:list_d")
 
-generate_table_3sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = p_b, p_c = p_c, osn_AB = osn_AB, osn_AC = osn_AC, osn_BC = osn_BC){
-  ### create dataset from contingency table
+# Define function to generate contingency table with three sources,
+# see Hammond et al., 2023 for further details.
+generate_table_3sources = function(N = N, Nsources = Nsources,
+                                   p_a = p_a, p_b = p_b, p_c = p_c,
+                                   osn_AB = osn_AB, osn_AC = osn_AC, osn_BC = osn_BC){
+  # create dataset from contingency table,
+  # see Hammond et al. (2023) for further details.
   osn_1a = osn_AB
   osn_1b = osn_AB
   
@@ -44,26 +92,26 @@ generate_table_3sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = 
   osn_3a = osn_BC
   osn_3b = osn_BC
   
-  list_a <- factor(c("in","in","in","in","missed","missed","missed","missed"),
-                   levels=c("missed","in"))
+  list_a<- factor(c("in","in","in","in","missed","missed","missed","missed"),
+                  levels=c("missed","in"))
   
-  list_b <- factor(c("in","in","missed","missed","in","in","missed","missed"),
-                   levels=c("missed","in"))
+  list_b<- factor(c("in","in","missed","missed","in","in","missed","missed"),
+                  levels=c("missed","in"))
   
-  list_c <- factor(c("in","missed","in","missed","in","missed","in","missed"),
-                   levels=c("missed","in"))
+  list_c<- factor(c("in","missed","in","missed","in","missed","in","missed"),
+                  levels=c("missed","in"))
   
   count <- c((p_a*p_b*p_c*N),((p_a)*(p_b)*(1-p_c)*N),
              ((p_a)*(1-p_b)*(p_c)*N),((p_a)*(1-p_b)*(1-p_c)*N),
              ((1-p_a)*(p_b)*(p_c)*N),((1-p_a)*(p_b)*(1-p_c)*N),
              ((1-p_a)*(1-p_b)*(p_c)*N),((1-p_a)*(1-p_b)*(1-p_c)*N))
   
-  data_2 <- data.frame(list_a, list_b, list_c, count)
+  data_2 <- data.frame(list_a,list_b,list_c, count)
   data_2$offset <- c(log(osn_1b) + log(osn_2b) + log(osn_3b),
                      log(osn_1a), log(osn_2a), log(1),
                      log(osn_3a), log(1), log(1), log(1))
   
-  GLM <- glm(formula = count ~ list_a + list_b + list_c,
+  GLM <- glm(formula = count ~list_a+list_b+list_c,
              family = poisson(link = "log"),
              data = data_2,
              offset = data_2$offset)
@@ -153,7 +201,10 @@ generate_table_3sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = 
   return(table)
 }
 
-generate_table_4sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = p_b, p_c = p_c, p_d = p_d, 
+# Define function to generate contingency table with four sources,
+# see Hammond et al., 2023 for further details.
+generate_table_4sources = function(N = N, Nsources = Nsources, 
+                                   p_a = p_a, p_b = p_b, p_c = p_c, p_d = p_d,
                                    osn_AB=osn_AB, osn_BC=osn_BC, osn_CD=osn_CD, osn_AD=osn_AD){
   osn_1<-osn_AB
   osn_7<-osn_AB
@@ -180,17 +231,25 @@ generate_table_4sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = 
   osn_18<-1
   osn_23<-1
   
-  list_a <- factor(c("in","in","in","in","in","in","in","in","missed","missed","missed","missed","missed","missed","missed","missed"),
-                   levels=c("missed","in"))
+  list_a<- factor(c("in","in","in","in","in","in",
+                    "in","in","missed","missed","missed",
+                    "missed","missed","missed","missed","missed"),
+                  levels=c("missed","in"))
   
-  list_b <- factor(c("in","in","missed","missed","in","in","missed","missed","in","in","in","in","missed","missed","missed","missed"),
-                   levels=c("missed","in"))
+  list_b<- factor(c("in","in","missed","missed","in","in",
+                    "missed","missed","in","in","in","in",
+                    "missed","missed","missed","missed"),
+                  levels=c("missed","in"))
   
-  list_c <- factor(c("in","in","in","in","missed","missed","missed","missed","in","in","missed","missed","in","in","missed","missed"),
-                   levels=c("missed","in"))
+  list_c<- factor(c("in","in","in","in","missed","missed",
+                    "missed","missed","in","in","missed",
+                    "missed","in","in","missed","missed"),
+                  levels=c("missed","in"))
   
-  list_d <- factor(c("in","missed","in","missed","in","missed","in","missed","in","missed","in","missed","in","missed","in","missed"),
-                   levels=c("missed","in"))
+  list_d<- factor(c("in","missed","in","missed","in","missed",
+                    "in","missed","in","missed","in",
+                    "missed","in","missed","in","missed"),
+                  levels=c("missed","in"))
   
   count <- c(   p_a  *    p_b  *    p_c  *    p_d  * N,
                 (   p_a  *    p_b  *    p_c  * (1-p_d) * N),
@@ -209,17 +268,19 @@ generate_table_4sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = 
                 ((1-p_a) * (1-p_b) * (1-p_c) *    p_d  * N),
                 ((1-p_a) * (1-p_b) * (1-p_c) * (1-p_d) * N))
   
-  data_2 <- data.frame(list_a, list_b, list_c, list_d, count)
+  data_2 <- data.frame(list_a,list_b,list_c, list_d, count)
   
-  data_2$offset <- c(log(osn_1) + log(osn_2) + log(osn_3) +log(osn_4) + log(osn_5) + log(osn_6),
-                     log(osn_7) + log(osn_8) + log(osn_9),
-                     log(osn_13)+ log(osn_14) + log(osn_15),
+  data_2$offset <- c(log(osn_1) + log(osn_2) + log(osn_3) +log(osn_4) + 
+                       log(osn_5) + log(osn_6), log(osn_7) + log(osn_8) +
+                       log(osn_9), log(osn_13)+ log(osn_14) + log(osn_15),
                      log(osn_20),log(osn_10)+ log(osn_11) + log(osn_12),
-                     log(osn_19), log(osn_21),log(1),log(osn_16) + log(osn_17) + log(osn_18),
-                     log(osn_22), log(osn_23),log(1), log(osn_24), log(1), log(1),log(1))
+                     log(osn_19), log(osn_21), log(1), log(osn_16) + 
+                       log(osn_17) + log(osn_18),
+                     log(osn_22), log(osn_23),
+                     log(1), log(osn_24), log(1), log(1), log(1))
   
   ### model estimated counts from independence model and include offset term
-  GLM <- glm(formula = count ~ list_a + list_b + list_c + list_d,
+  GLM <- glm(formula = count ~list_a+list_b+list_c+list_d,
              family = poisson(link = "log"),
              data = data_2,
              offset = data_2$offset)
@@ -252,23 +313,23 @@ generate_table_4sources = function(N = N, Nsources = Nsources, p_a = p_a, p_b = 
   return(table)
 }
 
-
-estimate_MSEs = function(table = table, Nsources = Nsources, formula = formula){
+# Function to obtain different population size estimates
+estimate_MSEs = function(table = table, Nsources = Nsources,
+                         formula = formula){
   
   table_save = table
   n=sum(table$mysum)
   
-  ### model estimated counts from independence model
+  # Obtain ML estimate
   GLM <- glm(formula = formula,
              family = poisson(link = "log"),
              data = table)
   
   N_ML <- n + exp(summary(GLM)$coefficients[1,1])
   
-  # Evans adjustment
+  # Obtain Evans estimate 
   table[,"mysum"] = table[,"mysum"] + 0.5^(Nsources-1)
   
-  ### model estimated counts from independence model
   GLM <- glm(formula = formula,
              family = poisson(link = "log"),
              data = table)
@@ -276,23 +337,28 @@ estimate_MSEs = function(table = table, Nsources = Nsources, formula = formula){
   N_Evans <- n + exp(summary(GLM)$coefficients[1,1])
   
   table = table_save
+  
+  # Obtain Firth estimate
   GLM <- glm(formula = formula,
              family = poisson(link = "log"),
-             data = table, method = "brglmFit",type="MPL_Jeffreys")
+             data = table, method = "brglmFit",
+             type="MPL_Jeffreys")
   
   N_Firth <- n + exp(summary(GLM)$coefficients[1,1])
   
-  ### model estimated counts from independence model
+  # Obtain Kosmidis estimate
   GLM <- glm(formula = formula,
              family = poisson(link = "log"),
-             data = table, method = "brglmFit", type = "AS_mean")
+             data = table, method = "brglmFit",
+             type = "AS_mean")
   
   N_Kosmidis <- n + exp(summary(GLM)$coefficients[1,1])
   
-  ### model estimated counts from independence model
+  # Obtain Cordeiro estimate
   GLM <- try(glm(formula = formula,
                  family = poisson(link = "log"),
-                 data = table, method = "brglmFit", type = "correction"), silent = T)
+                 data = table, method = "brglmFit",
+                 type = "correction"), silent = T)
   
   if (class(GLM)[1]=="try-error"){
     N_Cordeiro = N_Firth}
@@ -300,19 +366,24 @@ estimate_MSEs = function(table = table, Nsources = Nsources, formula = formula){
     N_Cordeiro <- n + exp(summary(GLM)$coefficients[1,1])
   }
   
-  # Rivest adjustment
-  if (formula=="mysum ~ list_a + list_b + list_c"){
-    table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] = table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] + 1/6
-    table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] = table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] + 1/3
+  # Obtain Rivest estimate
+  if (formula=="mysum~list_a+list_b+list_c"){
+    table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] =
+      table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] + 1/6
+    table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] =
+      table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] + 1/3
   }
   
-  if (formula!="mysum ~ list_a + list_b + list_c"&Nsources==3){
-    table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] = table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] + 2/3
+  if (formula!="mysum~list_a+list_b+list_c"&Nsources==3){
+    table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] =
+      table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] + 2/3
   }
   
-  if (formula!="mysum ~ list_a + list_b + list_c + list_d"&Nsources==4){
-    table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] = table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] + 1/8
-    table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] = table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] + 1/3
+  if (formula!="mysum~list_a+list_b+list_c+list_d"&Nsources==4){
+    table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] =
+      table[rowSums(table[,1:Nsources]=="in")==1,"mysum"] + 1/8
+    table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] =
+      table[rowSums(table[,1:Nsources]=="in")==2,"mysum"] + 1/3
   }
   
   GLM <- glm(formula = formula,
@@ -323,6 +394,7 @@ estimate_MSEs = function(table = table, Nsources = Nsources, formula = formula){
   
   table = table_save
   
+  # Obtain Chapman MSE estimate
   if (Nsources==3){
     freqs = table$mysum
     X = as.matrix(table[,c(1:Nsources)])
@@ -356,22 +428,25 @@ estimate_MSEs = function(table = table, Nsources = Nsources, formula = formula){
     X = as.data.frame(cbind(1,X))
     colnames(X) = c("mysum", "list_a", "list_b", "list_c", "list_d")
     formula_X = formula
-    formula_X = gsub(" list_a:list_b ", " I(list_a*list_b) ", formula_X)
-    formula_X = gsub(" list_b:list_c ", " I(list_b*list_c) ", formula_X)
-    formula_X = gsub(" list_c:list_d ", " I(list_c*list_d) ", formula_X)
-    formula_X = gsub(" list_a:list_d ", " I(list_a*list_d) ", formula_X)
-    formula_X = gsub(" list_a:list_c ", " I(list_a*list_c) ", formula_X)
-    formula_X = gsub(" list_b:list_d ", " I(list_b*list_d) ", formula_X)
-    formula_X = gsub("list_a:list_b:list_c", " I(list_a*list_b*list_c) ", formula_X)
-    formula_X = gsub("list_a:list_b:list_d", " I(list_a*list_b*list_d) ", formula_X)
-    formula_X = gsub("list_a:list_c:list_d", " I(list_a*list_c*list_d) ", formula_X)
-    formula_X = gsub("list_b:list_c:list_d", " I(list_b*list_c*list_d) ", formula_X)
+    formula_X = gsub("list_a:list_b", "I(list_a*list_b)", formula_X)
+    formula_X = gsub("list_b:list_c", "I(list_b*list_c)", formula_X)
+    formula_X = gsub("list_c:list_d", "I(list_c*list_d)", formula_X)
+    formula_X = gsub("list_a:list_d", "I(list_a*list_d)", formula_X)
+    formula_X = gsub("list_a:list_c", "I(list_a*list_c)", formula_X)
+    formula_X = gsub("list_b:list_d", "I(list_b*list_d)", formula_X)
+    formula_X = gsub("list_a:list_b:list_c", "I(list_a*list_b*list_c)",
+                     formula_X)
+    formula_X = gsub("list_a:list_b:list_d", "I(list_a*list_b*list_d)",
+                     formula_X)
+    formula_X = gsub("list_a:list_c:list_d", "I(list_a*list_c*list_d)",
+                     formula_X)
+    formula_X = gsub("list_b:list_c:list_d", "I(list_b*list_c*list_d)",
+                     formula_X)
     X = as.matrix(model.frame(as.formula(formula_X), data = X))
     X = as.matrix(X)
     
     Z=Inverse(t(X)%*%X)%*%t(X)
-    z_abc = Z[1,]
-    
+    z_abc = Z[1,]  
     z_abc_big0 = z_abc
     z_abc_big0[z_abc_big0>0] = 0
   }
@@ -384,10 +459,12 @@ estimate_MSEs = function(table = table, Nsources = Nsources, formula = formula){
   
   N_Chap <- n + exp(summary(GLM)$coefficients[1,1])
   
-  return(list(n, N_ML, N_Evans, N_Firth, N_Cordeiro, N_Kosmidis, N_Rivest, N_Chap))
+  return(list(n, N_ML, N_Evans, N_Firth, N_Cordeiro,
+              N_Kosmidis, N_Rivest,
+              N_Chap))
 }
 
-
+### Loop over scenario 1 to 14
 for (s in 1:length(scenarios)){
   N = scenarios[[s]]$N
   Nsources = scenarios[[s]]$Nsources
@@ -426,85 +503,99 @@ for (s in 1:length(scenarios)){
   N_Rivest <- NULL
   N_Chap <- NULL
   
+  # Start Monte Carlo simulation for scenario s  
   for (mc in 1:MC){
     if (Nsources==3){
-      table = generate_table_3sources(N = N, Nsources = Nsources, p_a = p_a, p_b = p_b, p_c = p_c, osn_AB = osn_AB, osn_AC = osn_AC, osn_BC = osn_BC)
+      table = generate_table_3sources(N = N, Nsources = Nsources,
+                                      p_a = p_a, p_b = p_b, p_c = p_c,
+                                      osn_AB = osn_AB, osn_AC = osn_AC, osn_BC = osn_BC)
     }
     
     if (Nsources==4){
-      table = generate_table_4sources(N = N, Nsources = Nsources, p_a = p_a, p_b = p_b, p_c = p_c, p_d = p_d, osn_AB = osn_AB, osn_BC = osn_BC, osn_CD = osn_CD, osn_AD = osn_AD)
+      table = generate_table_4sources(N = N, Nsources = Nsources,
+                                      p_a = p_a, p_b = p_b, p_c = p_c, p_d = p_d,
+                                      osn_AB = osn_AB, osn_BC = osn_BC, osn_CD = osn_CD, osn_AD = osn_AD)
     }
     
     MSEs  = estimate_MSEs(table, Nsources = Nsources, formula = formula)
-    
+    # store estimates 
     n = c(n, MSEs[[1]])
     N_ML       <- c(N_ML,       MSEs[[2]])
     N_Evans    <- c(N_Evans,    MSEs[[3]])
     
-    N_Firth    <- c(N_Firth,     MSEs[[4]])
-    N_Kosmidis <- c(N_Kosmidis,  MSEs[[5]])
-    N_Cordeiro <- c(N_Cordeiro,  MSEs[[6]])
+    N_Firth    <- c(N_Firth,    MSEs[[4]])
+    N_Kosmidis <- c(N_Kosmidis, MSEs[[5]])
+    N_Cordeiro <- c(N_Cordeiro, MSEs[[6]])
     
-    N_Rivest   <- c(N_Rivest,    MSEs[[7]])
-    N_Chap     <- c(N_Chap,      MSEs[[8]])
-    }
+    N_Rivest   <- c(N_Rivest,   MSEs[[7]])
+    N_Chap     <- c(N_Chap,     MSEs[[8]])
+  }
   
   results_scenarios[[s]]=as.matrix(cbind(n, N_ML, N_Evans, 
                                          N_Firth, N_Kosmidis, N_Cordeiro,
                                          N_Rivest, N_Chap))
+  
   print(s)
   print(round(colMeans(results_scenarios[[s]]),1))
 }
 
-save.image("C:/Users/daanz/OneDrive/Bureaublad/Werk/Vangst Hervangst/Chapman/Results/Table MSE restricted publicatie.RData")
-load("C:/Users/daanz/OneDrive/Bureaublad/Werk/Vangst Hervangst/Chapman/Results/Table MSE restricted publicatie.RData")
-
-
+# replace failures in N_ML
 for (s in 1:length(scenarios)){
-  results_scenarios[[s]][results_scenarios[[s]][,"N_ML"]>10*mean(results_scenarios[[s]][,"N_Chap"]),"N_ML"] = 
-    results_scenarios[[s]][results_scenarios[[s]][,"N_ML"]>10*mean(results_scenarios[[s]][,"N_Chap"]),"N_Chap"]
+  print(round(colMeans(results_scenarios[[s]]),0))
+  results_scenarios[[s]][results_scenarios[[s]][,"N_ML"]>
+                           10*mean(results_scenarios[[s]][,"N_Chap"]),"N_ML"] = 
+    max(results_scenarios[[s]][,"N_Chap"])
 }
 
+# organise results for Table 5, 11 and 12
 est = numeric()
 est_sds = numeric()
-est_pvals = numeric()
+est_means = numeric()
 for (s in 1:length(scenarios)){
-  est_sd = cbind(t(t(format(round(colMeans(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1),nsmall=1))),t(t(round(colSds(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE)/MC^0.5,2))))
+  est_sd = cbind(format(round(colMeans(results_scenarios[[s]][,
+                                                              c(1,2,3,4,7,8)],na.rm=TRUE),1),nsmall=1),
+                 round(colSds(results_scenarios[[s]][,c(1,2,3,4,7,8)],na.rm=TRUE)/MC^0.5,2))
   est_sd = apply(est_sd,1,paste0, collapse = " (")
   est_sd = paste0(est_sd,")")
   est_sds = cbind(est_sds,est_sd)
-  TTESTS = apply(results_scenarios[[s]][,c(1,2,3,4,8)]-scenarios[[s]]$N,2,t.test)
-  est_pval = cbind(t(t(format(round(colMeans(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1),nsmall=1))),as.numeric(unlist(TTESTS)[c(3,14,25,36,47)]))
-  est_pval[as.numeric(est_pval[,2])<=0.01,2] = "***"
-  est_pval[as.numeric(est_pval[,2])>0.01&est_pval[,2]<=0.05,2] = "**"
-  est_pval[as.numeric(est_pval[,2])>0.05&est_pval[,2]<=0.1,2] = "*"
-  est_pval[as.numeric(est_pval[,2])>0.1,2] = ""
-  est_pval = apply(est_pval,1,paste0, collapse = "")
-  est_pvals = cbind(est_pvals,est_pval)
-  est = cbind(est,t(t(round(colMeans(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1))))
+  TTESTS = apply(results_scenarios[[s]][,c(1,2,3,4,7,8)] -
+                   scenarios[[s]]$N,2,t.test)
+  est_mean = cbind(format(round(colMeans(results_scenarios[[s]][,
+                                                                c(1,2,3,4,7,8)],na.rm=TRUE),1),nsmall=1),
+                   as.numeric(unlist(TTESTS)[c(3,14,25,36,47,58)]))
+  est_mean[as.numeric(est_mean[,2])<=0.01,2] = "***"
+  est_mean[as.numeric(est_mean[,2])>0.01&est_mean[,2]<=0.05,2] = "**"
+  est_mean[as.numeric(est_mean[,2])>0.05&est_mean[,2]<=0.1,2] = "*"
+  est_mean[as.numeric(est_mean[,2])>0.1,2] = ""
+  est_mean = apply(est_mean,1,paste0, collapse = "")
+  est_means = cbind(est_means,est_mean)
+  est = cbind(est,t(t(round(colMeans(results_scenarios[[s]][,
+                                                            c(1,2,3,4,7,8)],na.rm=TRUE),1))))
 }
 
 X = cbind(1:14,
-          c(100,500,10000,100,500,10000,100,500,10000,100,500,10000,20000,20000),
-          t(est_pvals))
-Y = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
+          c(100,500,10000,100,500,10000,100,500,10000,
+            100,500,10000,20000,20000),
+          t(est_means))
+Y = as.matrix(apply(X, 1, paste0, collapse = " & "),
+              nrow(X)-1,1)
 Y = gsub(".","&.",Y,fixed=TRUE)
-#Y = gsub("0 ","0&. ",Y,fixed=TRUE)
 print(Y)
 
 X = cbind(1:14,
-          c(100,500,10000,100,500,10000,100,500,10000,100,500,10000,20000,20000),
-          t(est_pvals))
-MSE_saturated_means = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(MSE_saturated_means)
+          c(100,500,10000,100,500,10000,100,500,10000,
+            100,500,10000,20000,20000),
+          t(est_means))
+MSE_saturated_means = as.matrix(apply(X, 1, paste0, collapse = " & "),
+                                nrow(X)-1,1)
 MSE_saturated_means = gsub(".","&.",MSE_saturated_means,fixed=TRUE)
 MSE_saturated_means = gsub("  ","",MSE_saturated_means)
-print(MSE_saturated_means)
 
 
 est_sds = numeric()
 for (s in 1:length(scenarios)){
-  est_sd  = format(round(colSds(results_scenarios[[s]][,c(1,2,3,4,8)],na.rm=TRUE),1),nsmall=1)
+  est_sd  = format(round(colSds(results_scenarios[[s]][,
+                                                       c(1,2,3,4,7,8)],na.rm=TRUE),1),nsmall=1)
   est_sds = cbind(est_sds, est_sd)
 }
 est_sds = est_sds[-1,]
@@ -514,41 +605,30 @@ X = cbind(1:7,
           c(0.5,0.35,0.4,0.25,0.3,0.25,0.15),
           c(0.2,0.3,0.15,0.2,0.1,0.15,0.15),
           t(est_sds))
-MSE_saturated_sigmas = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(MSE_saturated_sigmas)
+MSE_saturated_sigmas = as.matrix(apply(X, 1, paste0, collapse = " & "),
+                                 nrow(X)-1,1)
 MSE_saturated_sigmas = gsub(".","&.",MSE_saturated_sigmas,fixed=TRUE)
-print(MSE_saturated_sigmas)
 
 est_rmses = numeric()
 for (s in 1:length(scenarios)){
-  est_rmse  = format(round(colMeans(((results_scenarios[[s]][,c(1,2,3,4,8)]-scenarios[[s]]$N)^2),na.rm=TRUE)^0.5,1),nsmall=1)
+  est_rmse  = format(round(colMeans(((results_scenarios[[s]][,
+                                                             c(1,2,3,4,7,8)]-scenarios[[s]]$N)^2),na.rm=TRUE)^0.5,1),nsmall=1)
   est_rmses = cbind(est_rmses, est_rmse)
 }
 
 est_rmses = est_rmses[-1,]
 
 X = cbind(1:14,
-          c(100,500,10000,100,500,10000,100,500,10000,100,500,10000,20000,20000),
+          c(100,500,10000,100,500,10000,100,500,10000,
+            100,500,10000,20000,20000),
           t(est_rmses))
-MSE_saturated_rmses = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-print(MSE_saturated_rmses)
+MSE_saturated_rmses = as.matrix(apply(X, 1, paste0, collapse = " & "),
+                                nrow(X)-1,1)
 MSE_saturated_rmses = gsub(".","&.",MSE_saturated_rmses,fixed=TRUE)
 MSE_saturated_rmses = gsub("  ","",MSE_saturated_rmses)
-print(MSE_saturated_rmses)
-
-# est_sds_rmses = rbind(est_sds[1,],est_rmses[1,],est_sds[2,],est_rmses[2,],est_sds[3,],est_rmses[3,],est_sds[4,],est_rmses[4,])
-# 
-# X = cbind(1:7,
-#           c(100,100,500,500,10000,10000,100),
-#           c(0.5,0.35,0.4,0.25,0.3,0.25,0.15),
-#           c(0.2,0.3,0.15,0.2,0.1,0.15,0.15),
-#           t(est_sds_rmses))
-# MSE_saturated_sigmas_rmses = as.matrix(apply(X, 1, paste0, collapse = " & "),nrow(X)-1,1)
-# print(MSE_saturated_sigmas_rmses)
-# MSE_saturated_sigmas_rmses = gsub(".","&.",MSE_saturated_sigmas_rmses,fixed=TRUE)
-# MSE_saturated_sigmas_rmses = gsub("  ","",MSE_saturated_sigmas_rmses)
-# print(MSE_saturated_sigmas_rmses)
 
 MSE_saturated_means
 MSE_saturated_sigmas
 MSE_saturated_rmses
+
+# end script Table 5, 11 and 12
